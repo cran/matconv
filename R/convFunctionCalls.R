@@ -12,7 +12,9 @@ convFunctionsCalls <- function(linesMat, maps){
 		grepl(pat, noStringLin)
 	},rep(TRUE, length(linesDes)), USE.NAMES = FALSE))
 	
+	if(length(linesMat) == 1) linMapMat <- t(linMapMat)
 	linMapVec <- which(linMapMat, arr.ind = TRUE, useNames = FALSE)
+	
 	
 	convSeq <- if(nrow(linMapVec) > 0){ 1:nrow(linMapVec) } else { NULL }
 	for(convInd in convSeq){
@@ -21,9 +23,15 @@ convFunctionsCalls <- function(linesMat, maps){
 		pat <- mapNames[linMapVec[convInd, 2]]
 		funcStart <- regexpr(pat, lin)
 		restLin <- substr(lin, funcStart, nchar(lin)) 
-		guts <- getBetween(restLin, "(", ")")
-		matArgs <- strsplit(removeStrings(guts), ",")[[1]]
-		matArgs <- putBackStrings(matArgs, guts)
+		
+		matArgs <- sanitizeMatArgs(restLin)
+		
+		matReqVars <- strsplit(
+			getBetween(
+				substr(lin, 1, assignInd[linMapVec[convInd, 1]]),
+				"[", "]")
+			, " ")[[1]]
+		
 		if(length(matArgs) ==  0) next
 		
 		if(!(is.null(map$flags$spaceSepMatArgs))){
@@ -33,28 +41,34 @@ convFunctionsCalls <- function(linesMat, maps){
 		
 		if(length(map$argMap) == 1){
 			useMapInd <- 1
+			varOut <- map$flags$varOut
 		} else {
 			#Multiple dictionaries per matlab function
 			#use fun switcher
-			useMapInd <- map$flags$multSwitch(matArgs)
+			useMapInd <- map$flags$multSwitch(
+				matArgs, 
+				ifelse(length(matReqVars) == 0, 1, length(matReqVars)))
+			
+			varOut <- map$flags[[useMapInd]]$varOut
 		}
 		
 		rargs <- map$argMap[[useMapInd]](matArgs)$rargs
 		
 		#Use other flags
-		if(!is.null(map$flags$varOut)){
-			sliceAdd <- ifelse(grepl("\\[", map$flags$varOut[1]), "", "$")
-			reqVars <- strsplit(getBetween(lin, "[", "]"), " ")[[1]]
+		if(!is.null(varOut)){
+			sliceAdd <- ifelse(grepl("\\[", varOut[1]), "", "$")
 			addCalls <- paste(
-				paste0(reqVars, " <- lout", sliceAdd, map$flags$varOut),
+				paste0(matReqVars, " <- lout", sliceAdd, varOut),
 				collapse = "; ")
-			out <- sprintf("lout <- %s); %s",
+			out <- sprintf("lout <- %s); %s;",
 				rargs,
 				addCalls)
 			
 		} else {
-			out <- getBetween(restLin, '', ')',
+			out <- getBetween(removeGroups(restLin), '', '#\\D[#]', 
 				insertChar = rargs, whatIsEmpty = "first")
+			out <- putBackGroups(gsub('[#][a][#]', ")", out), restLin)
+			
 			out <- paste0(
 				substr(lin, 1, funcStart - 1),
 				out)
@@ -170,12 +184,12 @@ makeFuncMaps <- function(addDict = NULL, pathDict = ''){
 		wantVec <- anum
 
 		if(dupsMat[anum]){
-			lastDup <- which(!dupsMat[anum:length(argFuns)])[1] - 2 + anum
+			wantVec <- which(allFunNames[anum] == allFunNames)
+			lastDup <- rev(wantVec)[1]
 			if(is.na(lastDup)){
 				#All dups
 				lastDup <- length(dupsMat)
 			}
-			wantVec <- anum:lastDup
 			anum <- lastDup
 		}
 
@@ -247,13 +261,16 @@ parseFlags <- function(dictLines){
 			nchar(dictLines[ind]),
 			stDiv[[ind]] - 1
 		)
+		bef <- 1
+		strSansFlags[ind] <- ""
 		for(flagInd in 1:length(left)){
-			flagStr[[ind]] <- substr(dictLines[ind], left[flagInd], right[flagInd])
-			strSansFlags[ind] <- paste0(
-				substr(strSansFlags[ind], 1, left[flagInd] - 3),
-				substr(strSansFlags[ind], right[flagInd] + 1, nchar(strSansFlags[ind]))
-			)
+			flagStr[[ind]] <- c(unlist(flagStr[[ind]]), substr(dictLines[ind], left[flagInd], right[flagInd]))
+			
+			addStr <- substr(dictLines[ind], bef, left[flagInd] - 3)
+			strSansFlags[ind] <- paste0(strSansFlags[ind], addStr)
+			bef <- right[flagInd] + 1
 		}
+		strSansFlags[ind] <- paste0(strSansFlags[ind],  substr(dictLines[ind], bef, nchar(dictLines[ind])))
 	}
 
 	#make flags and funcSwitchers
@@ -278,7 +295,7 @@ parseFlags <- function(dictLines){
 			flags[[unind]] <- lapply(wantVec, function(x){
 				makeFlag(flagStr[[x]], makeSwitch = FALSE)
 			})
-			flags[[unind]]$multSwitch <- makeFunSwitcher(flagStr[wantVec])
+			flags[[unind]]$multSwitch <- makeFunSwitcher(lapply(flagStr[wantVec], function(x){x[1]}))
 
 		} else {
 			flags[[unind]] <- makeFlag(flagStr[[wantVec]])
@@ -341,18 +358,24 @@ makeFunSwitcher <- function(lFlags){
 
 	return(function(matArgs, numOut = 1){
 		useInd <- NULL
-		if(numOut > 1){
+		if(any(!is.na(lengthOutVec))){
 			useInd <- which(lengthOutVec == numOut)
 		}
+		
+		if(any(!is.na(lengthVec))){
+			useInd <- c(useInd, which(lengthVec == length(matArgs)))
+		}
+		
+		if(any(!is.null(unlist(matMap)))){
+			test <- vapply(matMap, function(mp){
+				check <- matArgs[as.integer(mp$arg)] == mp$val
+				if(length(check) == 0) check <- FALSE
+				return(check)
+			}, TRUE)
+			useInd <- c(useInd, which(test))
+		}
 
-		useInd <- c(useInd, which(lengthVec == length(matArgs)))
-
-		test <- vapply(matMap, function(mp){
-			check <- matArgs[as.integer(mp$arg)] == mp$val
-			if(length(check) == 0) check <- FALSE
-			return(check)
-		}, TRUE)
-		useInd <- c(useInd, which(test))
+		
 
 		if(length(useInd) == 0){
 			if(!is.null(finallyInd)){
@@ -364,4 +387,12 @@ makeFunSwitcher <- function(lFlags){
 
 		return(useInd[1])
 	})
+}
+
+sanitizeMatArgs <- function(rightSideLin){
+	guts <- getBetween(rightSideLin, "(", ")")
+	matArgs <- strsplit(removeStrings(removeData(removeGroups(guts))), ",")[[1]]
+	matArgs <- putBackGroups(putBackData(putBackStrings(matArgs, guts), guts), guts)
+	return(matArgs)
+	
 }
