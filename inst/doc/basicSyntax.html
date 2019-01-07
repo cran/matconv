@@ -4,7 +4,7 @@
 
 <head>
 
-<meta charset="utf-8">
+<meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 
@@ -31,7 +31,7 @@
 
 <h1 class="title toc-ignore">matconv: The use of syntax converters</h1>
 <h4 class="author"><em>Siddarta Jairam</em></h4>
-<h4 class="date"><em>Sunday, January 15, 2017</em></h4>
+<h4 class="date"><em>Sunday, January 06, 2019</em></h4>
 
 
 
@@ -54,12 +54,12 @@ rCode
 </th>
 <tr>
 <td valign="top">
-<p>thing = 5 * 3;</p>
-<p>thing2 = (thing ~= 14);</p>
+<div style="white-space: pre-line;">thing = 5 * 3;</div>
+<div style="white-space: pre-line;">thing2 = (thing ~= 14);</div>
 </td>
 <td valign="top">
-<p>thing &lt;- 5 * 3</p>
-<p>thing2 &lt;- (thing != 14)</p>
+<div style="white-space: pre-line;">thing &lt;- 5 * 3</div>
+<div style="white-space: pre-line;">thing2 &lt;- (thing != 14)</div>
 </td>
 </table>
 </div>
@@ -83,18 +83,18 @@ rCode
 </th>
 <tr>
 <td valign="top">
-<p>if argLen == 1</p>
-<p>  doThing = 9999;</p>
-<p>else</p>
-<p>  doThing = 1;</p>
-<p>end</p>
+<div style="white-space: pre-line;">if argLen == 1</div>
+<div style="white-space: pre-line;">  doThing = 9999;</div>
+<div style="white-space: pre-line;">else</div>
+<div style="white-space: pre-line;">  doThing = 1;</div>
+<div style="white-space: pre-line;">end</div>
 </td>
 <td valign="top">
-<p>if (argLen == 1){</p>
-<p>  doThing &lt;- 9999</p>
-<p>} else {</p>
-<p>  doThing &lt;- 1</p>
-<p>}</p>
+<div style="white-space: pre-line;">if (argLen == 1){</div>
+<div style="white-space: pre-line;">  doThing &lt;- 9999</div>
+<div style="white-space: pre-line;">} else {</div>
+<div style="white-space: pre-line;">  doThing &lt;- 1</div>
+<div style="white-space: pre-line;">}</div>
 </td>
 </table>
 </div>
@@ -112,18 +112,18 @@ rCode
 </th>
 <tr>
 <td valign="top">
-<p>function [ dat ] = xlsReadPretty(varargin))</p>
-<p>  didThing = 1*3;</p>
-<p>  dat = didThing / 3;</p>
-<p>end</p>
+<div style="white-space: pre-line;">function [ dat ] = xlsReadPretty(varargin))</div>
+<div style="white-space: pre-line;">  didThing = 1*3;</div>
+<div style="white-space: pre-line;">  dat = didThing / 3;</div>
+<div style="white-space: pre-line;">end</div>
 </td>
 <td valign="top">
-<p>xlsReadPretty &lt;- function(…){</p>
-<p>  varargin &lt;- list(…)</p>
-<p>  didThing &lt;- 1*3</p>
-<p>  dat &lt;- didThing / 3</p>
-<p>  return(dat)</p>
-<p>}</p>
+<div style="white-space: pre-line;">xlsReadPretty &lt;- function(…){</div>
+<div style="white-space: pre-line;">  varargin &lt;- list(…)</div>
+<div style="white-space: pre-line;">  didThing &lt;- 1*3</div>
+<div style="white-space: pre-line;">  dat &lt;- didThing / 3</div>
+<div style="white-space: pre-line;">  return(dat)</div>
+<div style="white-space: pre-line;">}</div>
 </td>
 </table>
 <p>In another version, there could be options to make this conversion more integrated with the rest of the code or specifying another return class other than ‘list’. This is a precursour to the function converters by adding these user functions into the dictionary of Matlab base functions to R base functions.</p>
@@ -136,7 +136,7 @@ rCode
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
     document.getElementsByTagName("head")[0].appendChild(script);
   })();
 </script>

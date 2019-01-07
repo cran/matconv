@@ -9,6 +9,7 @@ matCode <- c("function [out] = csvReadPretty(csvPath, hd)",
  "\tfid = fopen(csvPath,'r');",
  "    parse = textscan(fid, '%s','delimiter','\\n');",
  "    parse = parse{1};",
+ "    thing = 5.4",
  "    fclose(fid);",
  "    if(isempty(parse) || isempty(parse{1}))",
  "        out = parse;",
@@ -51,9 +52,7 @@ hMaps <- makeFuncMaps(
 ## ----dataConverters------------------------------------------------------
 source(system.file("extdata", "defDataConv.R", package = "matconv"))
 
-length(dataConvs)
-
 ## ----finish--------------------------------------------------------------
-out <- mat2r(matCode, funcConverters = hMaps, dataConverters = dataConvs)
+out <- mat2r(matCode, funcConverters = hMaps, dataConverters = dataConvs, verbose = 2)
 
 

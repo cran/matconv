@@ -1,7 +1,7 @@
 Package: matconv
 Type: Package
 Title: A Code Converter from the Matlab/Octave Language to R
-Version: 0.3.2
+Version: 0.4.0
 Authors@R: c(person("Siddarta", "Jairam", email = "sidjsb@gmail.com", role = c("aut", "cre")),
   person("David", "Hiebeler", email = "hiebeler@math.umaine.edu", role = "ctb"))
 Maintainer: Siddarta Jairam <sidjsb@gmail.com>
@@ -20,10 +20,10 @@ License: GPL (>= 2)
 Imports: methods
 Suggests: knitr, testthat
 VignetteBuilder: knitr
-RoxygenNote: 5.0.1
+RoxygenNote: 6.1.1
 NeedsCompilation: no
-Packaged: 2017-01-16 07:25:55 UTC; mogex
+Packaged: 2019-01-06 22:54:09 UTC; Yemeth
 Author: Siddarta Jairam [aut, cre],
   David Hiebeler [ctb]
 Repository: CRAN
-Date/Publication: 2017-01-16 08:39:25
+Date/Publication: 2019-01-07 16:40:29 UTC

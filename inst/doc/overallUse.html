@@ -4,7 +4,7 @@
 
 <head>
 
-<meta charset="utf-8">
+<meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 
@@ -18,7 +18,7 @@
 
 
 <style type="text/css">code{white-space: pre;}</style>
-<style type="text/css">
+<style type="text/css" data-origin="pandoc">
 div.sourceCode { overflow-x: auto; }
 table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
   margin: 0; padding: 0; vertical-align: baseline; border: none; }
@@ -54,7 +54,29 @@ code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
 code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
 code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
 code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+
 </style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' || rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
 
 
 
@@ -69,7 +91,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">matconv: How to convert matlab code</h1>
 <h4 class="author"><em>Siddarta Jairam</em></h4>
-<h4 class="date"><em>Sunday, January 15, 2017</em></h4>
+<h4 class="date"><em>Sunday, January 06, 2019</em></h4>
 
 
 
@@ -77,7 +99,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h2>Basic Conversion</h2>
 <p>If you just want a basic conversion with R syntax, calling “mat2r” with just the Matlab code.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">out &lt;-<span class="st"> </span><span class="kw">mat2r</span>(matCode)</code></pre></div>
-<pre><code>&gt; The previous code had 33 lines and the R code has 33 lines</code></pre>
+<pre><code>&gt; The previous code had 34 lines and the R code has 34 lines</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">names</span>(out)</code></pre></div>
 <pre><code>&gt; [1] &quot;matCode&quot; &quot;rCode&quot;</code></pre>
 <p>The function outputs a list with the converted code as “rCode” and the original code as “matCode”. This is so you can easily look at the differences between the two and what exactly the program is doing. There is also a default message that shows the number of lines in each. This can be turned off using “verbose = 0”. Verbose 2 makes it so that the resultant code is outputted as a message. The code can be written by supplying a destination path with the “pathOutR” parameter.</p>
@@ -85,13 +107,11 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hMaps &lt;-<span class="st"> </span><span class="kw">makeFuncMaps</span>(
     <span class="dt">pathDict =</span> <span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;HiebelerDict.txt&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;matconv&quot;</span>))</code></pre></div>
 <p>There are also data converters that come in either instation (“makeDataMap”) or slicing (makeSliceMap). To identify the Matlab code that needs converting, you can either give the left and right symbol that encloses the data or the Matlab class. The output is determined by the Rclass name given to the converter. Base converters are included as R code in the external data and can be used as below.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">source</span>(<span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;defDataConv.R&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;matconv&quot;</span>))
-
-<span class="kw">length</span>(dataConvs)</code></pre></div>
-<pre><code>&gt; [1] 4</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">source</span>(<span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;defDataConv.R&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;matconv&quot;</span>))</code></pre></div>
 <p>All these base dictionaries can be added to user functions as a new entry in the list. These are then given to the main driver as shown below.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">out &lt;-<span class="st"> </span><span class="kw">mat2r</span>(matCode, <span class="dt">funcConverters =</span> hMaps, <span class="dt">dataConverters =</span> dataConvs)</code></pre></div>
-<pre><code>&gt; The previous code had 33 lines and the R code has 33 lines</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">out &lt;-<span class="st"> </span><span class="kw">mat2r</span>(matCode, <span class="dt">funcConverters =</span> hMaps, <span class="dt">dataConverters =</span> dataConvs, <span class="dt">verbose =</span> <span class="dv">2</span>)</code></pre></div>
+<pre><code>&gt; The previous code had 34 lines and the R code has 34 lines</code></pre>
+<pre><code>&gt; csvReadPretty &lt;- function(csvPath, hd){   fid &lt;- fopen(csvPath,'r')    parse &lt;- textscan(fid, '%s','delimiter','\n')    parse &lt;- parse[[1]]    thing &lt;- 5.4    fclose(fid)    if (isempty(parse) || isempty(parse[[1]])){        out &lt;- parse    }    for ((row in (hd+1):length(parse))){        line &lt;- c(paste0(parse[[row]], ','))        commas &lt;- (gregexpr(',', line)[[1]])        col &lt;- 2        bef &lt;- commas(1)        if (bef!=1){            out[[row-hd,1]] &lt;- line(1:bef-1)        }        for (ca in commas(2:length(commas))){            #if the commas are next to each other just add col            if (bef+1 != ca){               out[[row,col]] &lt;- line(bef+1:ca-1)            }            col &lt;- col+1            bef &lt;- ca        }    }}</code></pre>
 <p>This system was made to be customizable for a projects needs as well as being extendable for other languages.</p>
 </div>
 
@@ -102,7 +122,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
     document.getElementsByTagName("head")[0].appendChild(script);
   })();
 </script>

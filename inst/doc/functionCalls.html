@@ -4,7 +4,7 @@
 
 <head>
 
-<meta charset="utf-8">
+<meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 
@@ -31,7 +31,7 @@
 
 <h1 class="title toc-ignore">matconv: Converting Function calls</h1>
 <h4 class="author"><em>Siddarta Jairam</em></h4>
-<h4 class="date"><em>Sunday, January 15, 2017</em></h4>
+<h4 class="date"><em>Sunday, January 06, 2019</em></h4>
 
 
 
@@ -51,13 +51,13 @@ rCode
 </th>
 <tr>
 <td valign="top">
-<p>linspace:seq, 2, 1</p>
+<div style="white-space: pre-line;">linspace:seq, 2, 1</div>
 </td>
 <td valign="top">
-<p>thing = linspace(first, second)</p>
+<div style="white-space: pre-line;">thing = linspace(first, second)</div>
 </td>
 <td valign="top">
-<p>thing &lt;- seq(second, first)</p>
+<div style="white-space: pre-line;">thing &lt;- seq(second, first)</div>
 </td>
 </table>
 <p>The dictionary is turned into converting functions that are returned as a list of functions using the function “makeFuncMaps”. These are named with the Matlab function so the right converter is chosen using name subsetting. You can also do literal strings and strings that have references to the arguments using a percent sign as shown below:</p>
@@ -74,19 +74,19 @@ rCode
 </th>
 <tr>
 <td valign="top">
-<p>linspace:seq, 1, 2, len = %3</p>
-<p>binornd:rbinom, 1L, 1, 2</p>
-<p>erf: , 2 * pnorm(%1 * sqrt(2)) - 1</p>
+<div style="white-space: pre-line;">linspace:seq, 1, 2, len = %3</div>
+<div style="white-space: pre-line;">binornd:rbinom, 1L, 1, 2</div>
+<div style="white-space: pre-line;">erf: , 2 * pnorm(%1 * sqrt(2)) - 1</div>
 </td>
 <td valign="top">
-<p>thing = linspace(1, 2, 3)</p>
-<p>hjkl = binornd(2.3, 1.5)</p>
-<p>asdf = erf(2)</p>
+<div style="white-space: pre-line;">thing = linspace(1, 2, 3)</div>
+<div style="white-space: pre-line;">hjkl = binornd(2.3, 1.5)</div>
+<div style="white-space: pre-line;">asdf = erf(2)</div>
 </td>
 <td valign="top">
-<p>thing &lt;- seq(1, 2, len = 3)</p>
-<p>hjkl &lt;- rbinom(1, 2.3, 1.5)</p>
-<p>asdf &lt;- (2 * pnorm(2 * sqrt(2)) - 1)</p>
+<div style="white-space: pre-line;">thing &lt;- seq(1, 2, len = 3)</div>
+<div style="white-space: pre-line;">hjkl &lt;- rbinom(1, 2.3, 1.5)</div>
+<div style="white-space: pre-line;">asdf &lt;- (2 * pnorm(2 * sqrt(2)) - 1)</div>
 </td>
 </table>
 <p>In the second example, R has an extra argument of number of outputs wanted which for the matlab function is always 1. To do this a literal numeral is used by append it with an “L”.</p>
@@ -111,19 +111,19 @@ rCode
 </th>
 <tr>
 <td valign="top">
-<p>rand–if 1 == 1L:runif, 2</p>
-<p>rand–if 2 == 1L:runif, 1</p>
-<p>rand–if finally:matrix, runif(%1 * %2), %1)</p>
+<div style="white-space: pre-line;">rand–if 1 == 1L:runif, 2</div>
+<div style="white-space: pre-line;">rand–if 2 == 1L:runif, 1</div>
+<div style="white-space: pre-line;">rand–if finally:matrix, runif(%1 * %2), %1)</div>
 </td>
 <td valign="top">
-<p>thing = rand(1, 5)</p>
-<p>thing = rand(5, 1)</p>
-<p>thing = rand(5, 5)</p>
+<div style="white-space: pre-line;">thing = rand(1, 5)</div>
+<div style="white-space: pre-line;">thing = rand(5, 1)</div>
+<div style="white-space: pre-line;">thing = rand(5, 5)</div>
 </td>
 <td valign="top">
-<p>thing &lt;- runif(5)</p>
-<p>thing &lt;- runif(5)</p>
-<p>thing &lt;- matrix(runif(5 * 5), 5))</p>
+<div style="white-space: pre-line;">thing &lt;- runif(5)</div>
+<div style="white-space: pre-line;">thing &lt;- runif(5)</div>
+<div style="white-space: pre-line;">thing &lt;- matrix(runif(5 * 5), 5))</div>
 </td>
 </table>
 <p>R doesn’t have a native way have more than one output from a function like matlab but we can simulate it using a list out and then assign the variables in other calls. For user made functions the solution was to return a list of the variables and this is the unpacking in another environment. This can be done with the flag on the output, “–out args”. here args is a space separated list with the args of that R gives in the list output.</p>
@@ -140,13 +140,13 @@ rCode
 </th>
 <tr>
 <td valign="top">
-<p>lu: , expand(lu(Matrix::Matrix(%1))) –out L U P</p>
+<div style="white-space: pre-line;">lu: , expand(lu(Matrix::Matrix(%1))) –out L U P</div>
 </td>
 <td valign="top">
-<p>[myL myU myP] = lu(badMatrix)</p>
+<div style="white-space: pre-line;">[myL myU myP] = lu(badMatrix)</div>
 </td>
 <td valign="top">
-<p>lout &lt;- (expand(lu(Matrix); myL &lt;- lout$L; myU &lt;- lout$U; myP &lt;- lout$P;</p>
+<div style="white-space: pre-line;">lout &lt;- (expand(lu(Matrix); myL &lt;- lout$L; myU &lt;- lout$U; myP &lt;- lout$P;</div>
 </td>
 </table>
 <p>Function switchers and multiple outputs or any other flag can be used together as everything is indexed at the same level. I can imagine more flags can be added to deal with matrix algebra more directly. This will evolve once the data structures are converted in a later version.</p>
@@ -159,7 +159,7 @@ rCode
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
     document.getElementsByTagName("head")[0].appendChild(script);
   })();
 </script>
