@@ -1,4 +1,4 @@
-## ----setup, include=FALSE------------------------------------------------
+## ----setup, include=FALSE-----------------------------------------------------
 library(matconv)
 library(knitr)
 
@@ -23,17 +23,17 @@ showExampleConv <- function(matIn){
 }
 
 
-## ----basSyntax-----------------------------------------------------------
+## ----basSyntax----------------------------------------------------------------
 example <- c( "thing = 5 * 3;", "thing2 = (thing ~= 14);")
 showExampleConv(example)
 
 
-## ----flow----------------------------------------------------------------
+## ----flow---------------------------------------------------------------------
 example <- c("if argLen == 1", "  doThing = 9999;","else", "  doThing = 1;","end")
 showExampleConv(example)
 
 
-## ----userFunctions-------------------------------------------------------
+## ----userFunctions------------------------------------------------------------
 example <- c("function [ dat ] = xlsReadPretty(varargin))", "  didThing = 1*3;", "  dat = didThing / 3;", "end")
 showExampleConv(example)
 

@@ -1,4 +1,4 @@
-## ----setup, include=FALSE------------------------------------------------
+## ----setup, include=FALSE-----------------------------------------------------
 library(matconv)
 library(knitr)
 
@@ -29,14 +29,14 @@ showExampleConv <- function(matIn, dict = ""){
 }
 
 
-## ----first_example-------------------------------------------------------
+## ----first_example------------------------------------------------------------
 
 showExampleConv(
 	"thing = linspace(first, second)",
 	"linspace:seq, 2, 1")
 
 
-## ----Function_literals---------------------------------------------------
+## ----Function_literals--------------------------------------------------------
 showExampleConv(
 	c("thing = linspace(1, 2, 3)",
 	"hjkl = binornd(2.3, 1.5)",
@@ -46,7 +46,7 @@ showExampleConv(
 	"erf: , 2 * pnorm(%1 * sqrt(2)) - 1"))
 
 
-## ----Func_switcher-------------------------------------------------------
+## ----Func_switcher------------------------------------------------------------
 showExampleConv(
 	c("thing = rand(1, 5)",
 	 "thing = rand(5, 1)",
@@ -56,7 +56,7 @@ showExampleConv(
     "rand--if finally:matrix, runif(%1 * %2), %1)"))
 
 
-## ----mult_out------------------------------------------------------------
+## ----mult_out-----------------------------------------------------------------
 showExampleConv(
   c("[myL myU myP] = lu(badMatrix)"),
   c("lu: , expand(lu(Matrix::Matrix(%1))) --out L U P")

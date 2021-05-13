@@ -1,4 +1,4 @@
-## ----setup, include=FALSE------------------------------------------------
+## ----setup, include=FALSE-----------------------------------------------------
 library(matconv)
 library(knitr)
 
@@ -40,19 +40,19 @@ matCode <- c("function [out] = csvReadPretty(csvPath, hd)",
  "",
  "end")
 
-## ----basic---------------------------------------------------------------
+## ----basic--------------------------------------------------------------------
 
 out <- mat2r(matCode)
 names(out)
 
-## ----functionMaps--------------------------------------------------------
+## ----functionMaps-------------------------------------------------------------
 hMaps <- makeFuncMaps(
 	pathDict = system.file("extdata", "HiebelerDict.txt", package = "matconv"))
 
-## ----dataConverters------------------------------------------------------
+## ----dataConverters-----------------------------------------------------------
 source(system.file("extdata", "defDataConv.R", package = "matconv"))
 
-## ----finish--------------------------------------------------------------
+## ----finish-------------------------------------------------------------------
 out <- mat2r(matCode, funcConverters = hMaps, dataConverters = dataConvs, verbose = 2)
 
 
